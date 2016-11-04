@@ -1,11 +1,18 @@
 #!/bin/bash -e
 #
-# S2I assemble script for the 'lighttpd-centos7' image.
+# S2I assemble script for the 'openshift-springboot-s2i' image.
 # The 'assemble' script builds your application source ready to run.
 #
 # For more information refer to the documentation:
 #  https://github.com/openshift/source-to-image/blob/master/docs/builder_image.md
 #
 
+export JAVA_HOME=/usr/java/jdk1.8.0_111/jre
+export M2_HOME=/usr/local/apache-maven/apache-maven-3.3.9
+export PATH=$JAVA_HOME/bin:$M2_HOME/bin:$PATH
+
 echo "---> Installing application source"
 cp -Rf /tmp/src/. ./
+echo "PATH = $PATH"
+mvn clean package
+cp -f ./target/*jar application.jar

@@ -1,5 +1,5 @@
 
-IMAGE_NAME = lighttpd-centos7
+IMAGE_NAME = openshift-springboot-s2i
 
 build:
 	docker build -t $(IMAGE_NAME) .
