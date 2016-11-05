@@ -20,4 +20,5 @@ command ```./test/s2i build https://github.com/veretie/prime-numbers.git openshi
 will create ```prime-numbers-openshift``` image with SpringBoot application started on image run/start.
 
 ## Publish image
-Builder image can be published to Docker Hub or other Docker repo for OpenShift availability with ```docker push <yourname>/openshift-springboot-s2i```.
+Builder image can be published to Docker Hub or other Docker repo for OpenShift availability 
+with ```docker push <yourname>/openshift-springboot-s2i``` command.
