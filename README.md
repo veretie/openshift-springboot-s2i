@@ -14,9 +14,10 @@ Details about OpenShift builds and builder image usage described at https://docs
  
 ## Test image
 OpenShift provides **s2i** tool which can be found in ```test``` directory. 
-With the help of **s2i** you can explicitly test builder image using actual SpringBoot source code from GIT .
-**s2i** for testing can be used in the following format ```s2i build <source code> openshift-springboot-s2i:latest <application image>```.
-For instance, command ```./test/s2i build https://github.com/veretie/prime-numbers.git openshift-springboot-s2i:latest prime-numbers-openshift``` will create ```prime-numbers-openshift``` image with SpringBoot application started on image run/start.
+With the help of **s2i** you can explicitly test builder image using actual SpringBoot source code from GIT.
+**s2i** for testing can be used in the following format: ```s2i build <source code> openshift-springboot-s2i:latest <application image>```, i.e. 
+command ```./test/s2i build https://github.com/veretie/prime-numbers.git openshift-springboot-s2i:latest prime-numbers-openshift``` 
+will create ```prime-numbers-openshift``` image with SpringBoot application started on image run/start.
 
 ## Publish image
 Builder image can be published to Docker Hub or other Docker repo for OpenShift availability with ```docker push <yourname>/openshift-springboot-s2i```.
