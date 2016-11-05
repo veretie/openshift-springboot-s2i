@@ -1,0 +1,14 @@
+#!/bin/bash -e
+cat <<EOF
+This is the ee S2I image:
+To use it, install S2I: https://github.com/openshift/source-to-image
+
+Sample invocation:
+
+s2i build git://<source code> openshift-springboot-s2i:latest <application image>
+
+Example: s2i build test/test-app/ openshift-springboot-s2i:latest test-app-s2i
+
+You can then run the resulting image via:
+docker run <application image>
+EOF
