@@ -1,20 +1,22 @@
 # openshift-springboot-s2i
-OpenShift Docker builder image creation project. This image will allow OpenShift to build Maven SpringBoot application image from source.
+OpenShift Docker builder image creation project. This image will allow OpenShift to build Maven SpringBoot application image from GIT source.
+Details about OpenShift builds and builder image usage described at https://docs.openshift.com/enterprise/3.0/dev_guide/builds.html
 
-## Build
+## Build image
 
 ### Pre-requisites
- - **Linux OS** To trigger build in Windows, use provided ```Vagrantfile``` which will create Linux Centos 7 OS host.
- - **Docker** Project artifact is Docker builder image.
-
-### Testing your scripts and image
-Execute UNIX ```make test``` command 
-OpenShift provides s2i tool which can be found in ```test``` directory. More details on s2i tool can be found in   
- - Testing command ```./test/s2i build test/test-app/ openshift-springboot-s2i:latest test-s2i``` 
-
+ - **Linux OS** needed to trigger build in Windows, use provided ```Vagrantfile``` which will create Linux Centos 7 OS host.
+ - **Docker** needed to create Docker builder image for OpenShift.
 
 ### Create image
-Execute UNIX ```make build``` command which will create ```openshift-springboot-s2i``` docker image
-
+ - Execute ```make test``` command to create candidate build and run tests against it [optional]
+ - Execute ```make build``` command to create ```openshift-springboot-s2i``` docker image
  
-## Notes
+## Test image
+OpenShift provides **s2i** tool which can be found in ```test``` directory. 
+With the help of **s2i** you can explicitly test builder image using actual SpringBoot source code from GIT .
+Syntax: ```s2i build <source code> openshift-springboot-s2i:latest <application image>```
+For instance, command ```./test/s2i build https://github.com/veretie/prime-numbers.git openshift-springboot-s2i:latest prime-numbers-openshift``` will create ```prime-numbers-openshift``` image with SpringBoot application started on image run/start.
+
+## Publish image
+Builder image can be published to Docker Hub or other Docker repo for OpenShift availability with ```docker push <yourname>/openshift-springboot-s2i```.
