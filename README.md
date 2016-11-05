@@ -22,3 +22,7 @@ will create ```prime-numbers-openshift``` image with SpringBoot application star
 ## Publish image
 Builder image can be published to Docker Hub or other Docker repo for OpenShift availability 
 with ```docker push <yourname>/openshift-springboot-s2i``` command.
+
+## Tools used by builder image to build source
+ - Maven 3.3.9
+ - JDK 1.8.0_111

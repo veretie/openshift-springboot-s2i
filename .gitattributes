@@ -1,4 +1,4 @@
-.s2i/*		text eol=lf 
+.s2i/bin/*		text eol=lf 
 *.sh		text eol=lf 
 test/run	text eol=lf
 Dockerfile		text eol=lf 
