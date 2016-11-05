@@ -1,0 +1,5 @@
+.s2i/*		text eol=lf 
+*.sh		text eol=lf 
+test/run	text eol=lf
+Dockerfile		text eol=lf 
+Makefile		text eol=lf 
