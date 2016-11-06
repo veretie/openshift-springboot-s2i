@@ -7,7 +7,7 @@ ENV MAVEN_VERSION=3.3.9
 ENV JAVA_VERSION=1.8.0_111
 
 # Set labels used in OpenShift to describe the builder images
-LABEL io.k8s.description="Platform for serving Spring Boot micro-services" \
+LABEL io.k8s.description="Buidler image for serving Spring Boot micro-services" \
       io.k8s.display-name="openshift-springboot-s2i 1.0.0" \
       io.openshift.tags="builder,html,springboot"
 
@@ -26,7 +26,10 @@ RUN wget http://www-eu.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven
 # Defines the location of the S2I
 # Although this is defined in openshift/base-centos7 image it's repeated here
 # to make it clear why the following COPY operation is happening
-LABEL io.openshift.s2i.scripts-url=image:///usr/local/s2i
+LABEL io.openshift.s2i.scripts-url=image:///usr/local/s2i \
+		io.s2i.scripts-url=image:///usr/local/s2i \
+		vendor=veretie
+		
 # Copy the S2I scripts from ./.s2i/bin/ to /usr/local/s2i when making the builder image
 COPY ./.s2i/bin/ /usr/local/s2i
 
@@ -35,6 +38,9 @@ RUN chown -R 1001:1001 /opt/app-root
 
 # Set the default user for the image, the user itself was created in the base image
 USER 1001
+
+# Specify the ports the final image will expose
+EXPOSE 8080
 
 # Set the default CMD to print the usage of the image, if somebody does docker run
 CMD ["/usr/local/s2i/usage"]

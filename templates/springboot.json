@@ -3,499 +3,123 @@ kind: Template
 metadata:
   creationTimestamp: null
   name: springboot-app
+  annotations:
+    description: "SpringBoot application" 
+    tags: "java,springboot"   
+  
 objects:
+
+apiVersion: v1
+kind: ImageStream
+metadata:
+  name: openshift-springboot-s2i
+  namespace: ${APPLICATION_NAME}
+spec:
+  dockerImageRepository: veretie/openshift-springboot-s2i
+
 - apiVersion: v1
   kind: BuildConfig
   metadata:
-    annotations:
-      openshift.io/generated-by: OpenShiftWebConsole
     creationTimestamp: null
-    labels:
-      app: prime-numbers-resources
-    name: prime-numbers-resources
   spec:
     output:
       to:
         kind: ImageStreamTag
-        name: prime-numbers-resources:latest
+        name: ${APPLICATION_NAME}-bc:latest
     postCommit: {}
     resources: {}
     runPolicy: Serial
     source:
       git:
-        ref: develop
-        uri: https://github.com/veretie/prime-numbers.git
+        ref: ${SOURCE_REPOSITORY_BRANCH}
+        uri: ${SOURCE_REPOSITORY_URL}
       type: Git
     strategy:
       sourceStrategy:
         from:
           kind: ImageStreamTag
           name: openshift-springboot-s2i:latest
-          namespace: openshift
+          namespace: ${APPLICATION_NAME}
       type: Source
     triggers:
-    - generic:
-        secret: 5f0d91acf1674308
-      type: Generic
-    - github:
-        secret: 01d1155a630a70b9
-      type: GitHub
     - imageChange: {}
       type: ImageChange
     - type: ConfigChange
-  status:
-    lastVersion: 0
-- apiVersion: v1
-  kind: Build
-  metadata:
-    annotations:
-      openshift.io/build-config.name: prime-numbers-resources
-      openshift.io/build.number: "1"
-      openshift.io/build.pod-name: prime-numbers-resources-1-build
-    creationTimestamp: null
-    labels:
-      app: prime-numbers-resources
-      buildconfig: prime-numbers-resources
-      openshift.io/build-config.name: prime-numbers-resources
-      openshift.io/build.start-policy: Serial
-    name: prime-numbers-resources-1
-  spec:
-    output:
-      pushSecret:
-        name: builder-dockercfg-88xgd
-      to:
-        kind: ImageStreamTag
-        name: prime-numbers-resources:latest
-    postCommit: {}
-    resources: {}
-    serviceAccount: builder
-    source:
-      git:
-        ref: master
-        uri: https://github.com/veretie/prime-numbers.git
-      type: Git
-    strategy:
-      sourceStrategy:
-        from:
-          kind: DockerImage
-          name: veretie/openshift-springboot-s2i@sha256:e8965454944620f16df5a23c5ccd7b05941fcba52cdafe53388f9e3b2e27621a
-      type: Source
-    triggeredBy:
-    - message: Build configuration change
-  status:
-    config:
-      name: prime-numbers-resources
-    phase: New
-- apiVersion: v1
-  kind: Build
-  metadata:
-    annotations:
-      openshift.io/build-config.name: prime-numbers-resources
-      openshift.io/build.number: "2"
-      openshift.io/build.pod-name: prime-numbers-resources-2-build
-    creationTimestamp: null
-    labels:
-      app: prime-numbers-resources
-      buildconfig: prime-numbers-resources
-      openshift.io/build-config.name: prime-numbers-resources
-      openshift.io/build.start-policy: Serial
-    name: prime-numbers-resources-2
-  spec:
-    output:
-      pushSecret:
-        name: builder-dockercfg-88xgd
-      to:
-        kind: ImageStreamTag
-        name: prime-numbers-resources:latest
-    postCommit: {}
-    resources: {}
-    revision:
-      git:
-        author:
-          email: edvinas.veretinskas@gmail.com
-          name: Edvinas
-        commit: 4e1d1da08cef35e4cdf39dad9d889a7a53a10a31
-        committer:
-          email: edvinas.veretinskas@gmail.com
-          name: Edvinas
-        message: Revert "Cleaning up the project"
-      type: Git
-    serviceAccount: builder
-    source:
-      git:
-        ref: develop
-        uri: https://github.com/veretie/prime-numbers.git
-      type: Git
-    strategy:
-      sourceStrategy:
-        from:
-          kind: DockerImage
-          name: veretie/openshift-springboot-s2i@sha256:e8965454944620f16df5a23c5ccd7b05941fcba52cdafe53388f9e3b2e27621a
-      type: Source
-    triggeredBy:
-    - message: Manually triggered
-  status:
-    config:
-      name: prime-numbers-resources
-    outputDockerImageReference: 172.30.53.244:5000/prime-numbers/prime-numbers-resources:latest
-    phase: New
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    annotations:
-      openshift.io/generated-by: OpenShiftWebConsole
-    creationTimestamp: null
-    generation: 1
-    labels:
-      app: prime-numbers-resources
-      edi: edi
-    name: prime-numbers-resources
-  spec:
-    tags:
-    - annotations: null
-      from:
-        kind: DockerImage
-        name: 172.30.53.244:5000/prime-numbers/prime-numbers-resources:latest
-      generation: null
-      importPolicy: {}
-      name: latest
-  status:
-    dockerImageRepository: ""
-- apiVersion: v1
-  kind: DeploymentConfig
-  metadata:
-    annotations:
-      openshift.io/generated-by: OpenShiftWebConsole
-    creationTimestamp: null
-    generation: 2
-    labels:
-      app: prime-numbers-resources
-    name: prime-numbers-resources
-  spec:
-    replicas: 1
-    selector:
-      deploymentconfig: prime-numbers-resources
-    strategy:
-      resources: {}
-      rollingParams:
-        intervalSeconds: 1
-        maxSurge: 25%
-        maxUnavailable: 25%
-        timeoutSeconds: 600
-        updatePeriodSeconds: 1
-      type: Rolling
-    template:
-      metadata:
-        creationTimestamp: null
-        labels:
-          app: prime-numbers-resources
-          deploymentconfig: prime-numbers-resources
-      spec:
-        containers:
-        - image: 172.30.53.244:5000/prime-numbers/prime-numbers-resources@sha256:3b1e6c1e0acb27f9309bfdf9a5d9e31d3542f698f862423f067f155e1b26f0ba
-          imagePullPolicy: Always
-          name: prime-numbers-resources
-          resources: {}
-          terminationMessagePath: /dev/termination-log
-        dnsPolicy: ClusterFirst
-        restartPolicy: Always
-        securityContext: {}
-        terminationGracePeriodSeconds: 30
-    test: false
-    triggers:
-    - imageChangeParams:
+
+kind: "DeploymentConfig"
+apiVersion: "v1"
+metadata:
+  name: ${APPLICATION_NAME}-dc
+spec:
+  template: 
+    metadata:
+      labels:
+        name: ${APPLICATION_NAME}-rc
+    spec:
+      containers:
+        - name: ${APPLICATION_NAME}
+  replicas: 1 
+  selector:
+    name: ${APPLICATION_NAME}-dc
+  triggers:
+    - type: "ConfigChange" 
+    - type: "ImageChange" 
+      imageChangeParams:
         automatic: true
         containerNames:
-        - prime-numbers-resources
+          - ${APPLICATION_NAME}
         from:
-          kind: ImageStreamTag
-          name: prime-numbers-resources:latest
-          namespace: prime-numbers
-      type: ImageChange
-    - type: ConfigChange
-  status:
-    availableReplicas: 1
-    observedGeneration: 2
-    replicas: 1
-    updatedReplicas: 1
-- apiVersion: v1
-  kind: ReplicationController
-  metadata:
-    annotations:
-      openshift.io/deployer-pod.name: prime-numbers-resources-1-deploy
-      openshift.io/deployment-config.latest-version: "1"
-      openshift.io/deployment-config.name: prime-numbers-resources
-      openshift.io/deployment.phase: Complete
-      openshift.io/deployment.replicas: "1"
-      openshift.io/deployment.status-reason: caused by an image change
-      openshift.io/encoded-deployment-config: |
-        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"prime-numbers-resources","namespace":"prime-numbers","selfLink":"/oapi/v1/namespaces/prime-numbers/deploymentconfigs/prime-numbers-resources","uid":"f266be90-a3bc-11e6-b5a2-525400c583ad","resourceVersion":"20578","generation":2,"creationTimestamp":"2016-11-06T01:04:19Z","labels":{"app":"prime-numbers-resources"},"annotations":{"openshift.io/generated-by":"OpenShiftWebConsole"}},"spec":{"strategy":{"type":"Rolling","rollingParams":{"updatePeriodSeconds":1,"intervalSeconds":1,"timeoutSeconds":600,"maxUnavailable":"25%","maxSurge":"25%"},"resources":{}},"triggers":[{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["prime-numbers-resources"],"from":{"kind":"ImageStreamTag","namespace":"prime-numbers","name":"prime-numbers-resources:latest"},"lastTriggeredImage":"172.30.53.244:5000/prime-numbers/prime-numbers-resources@sha256:3b1e6c1e0acb27f9309bfdf9a5d9e31d3542f698f862423f067f155e1b26f0ba"}},{"type":"ConfigChange"}],"replicas":1,"test":false,"selector":{"deploymentconfig":"prime-numbers-resources"},"template":{"metadata":{"creationTimestamp":null,"labels":{"app":"prime-numbers-resources","deploymentconfig":"prime-numbers-resources"}},"spec":{"containers":[{"name":"prime-numbers-resources","image":"172.30.53.244:5000/prime-numbers/prime-numbers-resources@sha256:3b1e6c1e0acb27f9309bfdf9a5d9e31d3542f698f862423f067f155e1b26f0ba","resources":{},"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"Always"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{}}}},"status":{"latestVersion":1,"observedGeneration":1,"details":{"message":"caused by an image change","causes":[{"type":"ImageChange","imageTrigger":{"from":{"kind":"ImageStreamTag","namespace":"prime-numbers","name":"prime-numbers-resources:latest"}}}]}}}
-    creationTimestamp: null
-    generation: 1
-    labels:
-      app: prime-numbers-resources
-      openshift.io/deployment-config.name: prime-numbers-resources
-    name: prime-numbers-resources-1
-  spec:
-    replicas: 1
-    selector:
-      deployment: prime-numbers-resources-1
-      deploymentconfig: prime-numbers-resources
-    template:
-      metadata:
-        annotations:
-          openshift.io/deployment-config.latest-version: "1"
-          openshift.io/deployment-config.name: prime-numbers-resources
-          openshift.io/deployment.name: prime-numbers-resources-1
-        creationTimestamp: null
-        labels:
-          app: prime-numbers-resources
-          deployment: prime-numbers-resources-1
-          deploymentconfig: prime-numbers-resources
-      spec:
-        containers:
-        - image: 172.30.53.244:5000/prime-numbers/prime-numbers-resources@sha256:3b1e6c1e0acb27f9309bfdf9a5d9e31d3542f698f862423f067f155e1b26f0ba
-          imagePullPolicy: Always
-          name: prime-numbers-resources
-          resources: {}
-          terminationMessagePath: /dev/termination-log
-        dnsPolicy: ClusterFirst
-        restartPolicy: Always
-        securityContext: {}
-        terminationGracePeriodSeconds: 30
-  status:
-    replicas: 0
+          kind: "ImageStreamTag"
+          name: ${APPLICATION_NAME}-bc:latest
+  strategy: 
+    type: "Rolling"	
+	
 - apiVersion: v1
   kind: Route
   metadata:
-    annotations:
-      openshift.io/host.generated: "true"
     creationTimestamp: null
-    labels:
-      app: prime-numbers-resources
-    name: prime-numbers-route
+    name: ${APPLICATION_NAME}-route
   spec:
-    host: prime-numbers-route-prime-numbers.apps.10.2.2.2.xip.io
+    host: ${APPLICATION_URL_PREFIX}.10.2.2.2.xip.io
     to:
       kind: Service
-      name: prime-numbers-resources
+      name: ${APPLICATION_NAME}-service
       weight: 100
-  status:
-    ingress:
-    - conditions:
-      - lastTransitionTime: 2016-11-06T02:08:29Z
-        status: "True"
-        type: Admitted
-      host: prime-numbers-route-prime-numbers.apps.10.2.2.2.xip.io
-      routerName: router
+
 - apiVersion: v1
   kind: Service
   metadata:
     creationTimestamp: null
-    labels:
-      app: prime-numbers-resources
-    name: prime-numbers-resources
+    name: ${APPLICATION_NAME}-service
   spec:
     ports:
-    - port: 8081
+    - port: ${APPLICATION_PORT}
       protocol: TCP
-      targetPort: 8081
+      targetPort: ${APPLICATION_PORT}
     selector:
-      deploymentconfig: prime-numbers-resources
+      deploymentconfig: ${APPLICATION_NAME}-dc
     sessionAffinity: None
     type: ClusterIP
-  status:
-    loadBalancer: {}
-- apiVersion: v1
-  kind: Pod
-  metadata:
-    annotations:
-      kubernetes.io/created-by: |
-        {"kind":"SerializedReference","apiVersion":"v1","reference":{"kind":"ReplicationController","namespace":"prime-numbers","name":"prime-numbers-resources-1","uid":"0a611cda-a3be-11e6-b5a2-525400c583ad","apiVersion":"v1","resourceVersion":"20597"}}
-      openshift.io/deployment-config.latest-version: "1"
-      openshift.io/deployment-config.name: prime-numbers-resources
-      openshift.io/deployment.name: prime-numbers-resources-1
-      openshift.io/scc: anyuid
-    creationTimestamp: null
-    generateName: prime-numbers-resources-1-
-    labels:
-      app: prime-numbers-resources
-      deployment: prime-numbers-resources-1
-      deploymentconfig: prime-numbers-resources
-  spec:
-    containers:
-    - image: 172.30.53.244:5000/prime-numbers/prime-numbers-resources@sha256:3b1e6c1e0acb27f9309bfdf9a5d9e31d3542f698f862423f067f155e1b26f0ba
-      imagePullPolicy: Always
-      name: prime-numbers-resources
-      resources: {}
-      securityContext:
-        capabilities:
-          drop:
-          - MKNOD
-          - SYS_CHROOT
-        privileged: false
-        seLinuxOptions:
-          level: s0:c10,c5
-      terminationMessagePath: /dev/termination-log
-      volumeMounts:
-      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
-        name: default-token-wocwh
-        readOnly: true
-    dnsPolicy: ClusterFirst
-    host: origin
-    imagePullSecrets:
-    - name: default-dockercfg-cz0nx
-    nodeName: origin
-    restartPolicy: Always
-    securityContext:
-      seLinuxOptions:
-        level: s0:c10,c5
-    serviceAccount: default
-    serviceAccountName: default
-    terminationGracePeriodSeconds: 30
-    volumes:
-    - name: default-token-wocwh
-      secret:
-        secretName: default-token-wocwh
-  status:
-    phase: Pending
-- apiVersion: v1
-  kind: Pod
-  metadata:
-    annotations:
-      openshift.io/build.name: prime-numbers-resources-1
-      openshift.io/scc: privileged
-    creationTimestamp: null
-    labels:
-      openshift.io/build.name: prime-numbers-resources-1
-    name: prime-numbers-resources-1-build
-  spec:
-    containers:
-    - args:
-      - --loglevel=0
-      env:
-      - name: BUILD
-        value: |
-          {"kind":"Build","apiVersion":"v1","metadata":{"name":"prime-numbers-resources-1","namespace":"prime-numbers","selfLink":"/oapi/v1/namespaces/prime-numbers/builds/prime-numbers-resources-1","uid":"f27f1ebb-a3bc-11e6-b5a2-525400c583ad","resourceVersion":"20367","creationTimestamp":"2016-11-06T01:04:19Z","labels":{"app":"prime-numbers-resources","buildconfig":"prime-numbers-resources","openshift.io/build-config.name":"prime-numbers-resources","openshift.io/build.start-policy":"Serial"},"annotations":{"openshift.io/build-config.name":"prime-numbers-resources","openshift.io/build.number":"1"}},"spec":{"serviceAccount":"builder","source":{"type":"Git","git":{"uri":"https://github.com/veretie/prime-numbers.git","ref":"master"}},"strategy":{"type":"Source","sourceStrategy":{"from":{"kind":"DockerImage","name":"veretie/openshift-springboot-s2i@sha256:e8965454944620f16df5a23c5ccd7b05941fcba52cdafe53388f9e3b2e27621a"}}},"output":{"to":{"kind":"DockerImage","name":"172.30.53.244:5000/prime-numbers/prime-numbers-resources:latest"},"pushSecret":{"name":"builder-dockercfg-88xgd"}},"resources":{},"postCommit":{},"triggeredBy":[{"message":"Build configuration change"}]},"status":{"phase":"New","outputDockerImageReference":"172.30.53.244:5000/prime-numbers/prime-numbers-resources:latest","config":{"kind":"BuildConfig","namespace":"prime-numbers","name":"prime-numbers-resources"}}}
-      - name: SOURCE_REPOSITORY
-        value: https://github.com/veretie/prime-numbers.git
-      - name: SOURCE_URI
-        value: https://github.com/veretie/prime-numbers.git
-      - name: SOURCE_REF
-        value: master
-      - name: ORIGIN_VERSION
-        value: v1.3.0
-      - name: ALLOWED_UIDS
-        value: 1-
-      - name: DROP_CAPS
-        value: KILL,MKNOD,SETGID,SETUID,SYS_CHROOT
-      - name: PUSH_DOCKERCFG_PATH
-        value: /var/run/secrets/openshift.io/push
-      image: openshift/origin-sti-builder:v1.3.0
-      imagePullPolicy: IfNotPresent
-      name: sti-build
-      resources: {}
-      securityContext:
-        privileged: true
-      terminationMessagePath: /dev/termination-log
-      volumeMounts:
-      - mountPath: /var/run/docker.sock
-        name: docker-socket
-      - mountPath: /var/run/secrets/openshift.io/push
-        name: builder-dockercfg-88xgd-push
-        readOnly: true
-      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
-        name: builder-token-18lqu
-        readOnly: true
-    dnsPolicy: ClusterFirst
-    host: origin
-    imagePullSecrets:
-    - name: builder-dockercfg-88xgd
-    nodeName: origin
-    restartPolicy: Never
-    securityContext: {}
-    serviceAccount: builder
-    serviceAccountName: builder
-    terminationGracePeriodSeconds: 30
-    volumes:
-    - hostPath:
-        path: /var/run/docker.sock
-      name: docker-socket
-    - name: builder-dockercfg-88xgd-push
-      secret:
-        secretName: builder-dockercfg-88xgd
-    - name: builder-token-18lqu
-      secret:
-        secretName: builder-token-18lqu
-  status:
-    phase: Pending
-- apiVersion: v1
-  kind: Pod
-  metadata:
-    annotations:
-      openshift.io/build.name: prime-numbers-resources-2
-      openshift.io/scc: privileged
-    creationTimestamp: null
-    labels:
-      openshift.io/build.name: prime-numbers-resources-2
-    name: prime-numbers-resources-2-build
-  spec:
-    containers:
-    - args:
-      - --loglevel=0
-      env:
-      - name: BUILD
-        value: |
-          {"kind":"Build","apiVersion":"v1","metadata":{"name":"prime-numbers-resources-2","namespace":"prime-numbers","selfLink":"/oapi/v1/namespaces/prime-numbers/builds/prime-numbers-resources-2","uid":"3ab6db8c-a3bd-11e6-b5a2-525400c583ad","resourceVersion":"20424","creationTimestamp":"2016-11-06T01:06:21Z","labels":{"app":"prime-numbers-resources","buildconfig":"prime-numbers-resources","openshift.io/build-config.name":"prime-numbers-resources","openshift.io/build.start-policy":"Serial"},"annotations":{"openshift.io/build-config.name":"prime-numbers-resources","openshift.io/build.number":"2"}},"spec":{"serviceAccount":"builder","source":{"type":"Git","git":{"uri":"https://github.com/veretie/prime-numbers.git","ref":"develop"}},"strategy":{"type":"Source","sourceStrategy":{"from":{"kind":"DockerImage","name":"veretie/openshift-springboot-s2i@sha256:e8965454944620f16df5a23c5ccd7b05941fcba52cdafe53388f9e3b2e27621a"}}},"output":{"to":{"kind":"DockerImage","name":"172.30.53.244:5000/prime-numbers/prime-numbers-resources:latest"},"pushSecret":{"name":"builder-dockercfg-88xgd"}},"resources":{},"postCommit":{},"triggeredBy":[{"message":"Manually triggered"}]},"status":{"phase":"New","outputDockerImageReference":"172.30.53.244:5000/prime-numbers/prime-numbers-resources:latest","config":{"kind":"BuildConfig","namespace":"prime-numbers","name":"prime-numbers-resources"}}}
-      - name: SOURCE_REPOSITORY
-        value: https://github.com/veretie/prime-numbers.git
-      - name: SOURCE_URI
-        value: https://github.com/veretie/prime-numbers.git
-      - name: SOURCE_REF
-        value: develop
-      - name: ORIGIN_VERSION
-        value: v1.3.0
-      - name: ALLOWED_UIDS
-        value: 1-
-      - name: DROP_CAPS
-        value: KILL,MKNOD,SETGID,SETUID,SYS_CHROOT
-      - name: PUSH_DOCKERCFG_PATH
-        value: /var/run/secrets/openshift.io/push
-      image: openshift/origin-sti-builder:v1.3.0
-      imagePullPolicy: IfNotPresent
-      name: sti-build
-      resources: {}
-      securityContext:
-        privileged: true
-      terminationMessagePath: /dev/termination-log
-      volumeMounts:
-      - mountPath: /var/run/docker.sock
-        name: docker-socket
-      - mountPath: /var/run/secrets/openshift.io/push
-        name: builder-dockercfg-88xgd-push
-        readOnly: true
-      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
-        name: builder-token-18lqu
-        readOnly: true
-    dnsPolicy: ClusterFirst
-    host: origin
-    imagePullSecrets:
-    - name: builder-dockercfg-88xgd
-    nodeName: origin
-    restartPolicy: Never
-    securityContext: {}
-    serviceAccount: builder
-    serviceAccountName: builder
-    terminationGracePeriodSeconds: 30
-    volumes:
-    - hostPath:
-        path: /var/run/docker.sock
-      name: docker-socket
-    - name: builder-dockercfg-88xgd-push
-      secret:
-        secretName: builder-dockercfg-88xgd
-    - name: builder-token-18lqu
-      secret:
-        secretName: builder-token-18lqu
-  status:
-    phase: Pending
+
+parameters:
+  - name: APPLICATION_NAME 
+    description: The name of application 
+    value: prime-numbers
+    required: true 
+  - name: APPLICATION_PORT
+    description: The port of application 
+    value: 8081
+    required: true 
+  - name: APPLICATION_URL_PREFIX
+    description: The URL of application to be mapped 
+    value: prime.numbers
+    required: true 	
+  - name: SOURCE_REPOSITORY_URL 
+    description: The URL of the repository with your application source code 
+    value: https://github.com/veretie/prime-numbers.git
+    required: true 
+  - name: SOURCE_REPOSITORY_BRANCH
+    description: Git branch
+    value: develop
+    required: true 	
+
