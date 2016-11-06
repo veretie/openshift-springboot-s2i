@@ -26,3 +26,11 @@ with ```docker push <yourname>/openshift-springboot-s2i``` command.
 ## Tools used by builder image to build source
  - Maven 3.3.9
  - JDK 1.8.0_111
+ 
+# Using builder image in OpenShift v3
+Template ```templates/ose-v3-template.json``` provided to automate creation of OSE v3 objects:
+ - route & service
+ - build & deploy configs
+ - image stream
+To install the template issue ```oc create -f <path-to-template>/ose-v3-template.json -n openshift``` command in Openshift.
+ 
