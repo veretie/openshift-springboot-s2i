@@ -18,9 +18,7 @@ echo "PATH = $PATH"
 echo "---> Running maven packaging"
 mvn clean package
 
-echo "---> Creating deployments directory and copying JARs over"
-mkdir /deployments
-cp -f /tmp/src/target/*jar /deployments/application.jar
+echo "---> copying JAR over to /opt/app-root"
+cp -f /tmp/src/target/*jar /opt/app-root/application.jar
 
 rm -rf /tmp/*
-chmod -R 755 /deployments

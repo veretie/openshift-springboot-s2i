@@ -13,4 +13,4 @@ then
     export JOLOKIA_ARGS="-Djolokia=true"
 fi
 
-exec java ${JOLOKIA_ARGS} -jar /deployments/application.jar
+exec java ${JOLOKIA_ARGS} -jar /opt/app-root/application.jar
