@@ -17,11 +17,10 @@ RUN wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2
  && rm -rf jdk-8u111-linux-x64.rpm
 
 # Install Maven
-RUN wget http://www-eu.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz \
- && tar xvf apache-maven-3.3.9-bin.tar.gz \
- && mkdir -p /usr/local/apache-maven/apache-maven-3.3.9 \ 
- && mv -v -n apache-maven-3.3.9/* /usr/local/apache-maven/apache-maven-3.3.9 \
- && rm -rf apache-maven-3.3.9-bin.tar.gz
+RUN curl -O http://www-eu.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz ; \
+ && mkdir -p /usr/local/apache-maven && tar zxvf apache-maven-3.3.9-bin.tar.gz -C /usr/local/apache-maven ; \
+ && rm -rf apache-maven-3.3.9-bin.tar.gz ; \
+ && chmod 755 -R /usr/local/apache-maven
 
 # Defines the location of the S2I
 # Although this is defined in openshift/base-centos7 image it's repeated here
