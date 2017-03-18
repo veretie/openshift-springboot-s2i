@@ -5,6 +5,8 @@ MAINTAINER Ed Veretinskas <ed@mits4u.co.uk>
 # Inform about software versions being used inside the builder
 ENV MAVEN_VERSION=3.3.9
 ENV JAVA_VERSION=1.8.0_111
+ENV JAVA_HOME=/usr/java/jdk1.8.0_111/jre
+ENV M2_HOME=/usr/local/apache-maven/apache-maven-3.3.9
 
 # Set labels used in OpenShift to describe the builder images
 LABEL io.k8s.description="Buidler image for serving Spring Boot micro-services" \

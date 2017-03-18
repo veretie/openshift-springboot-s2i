@@ -7,4 +7,10 @@
 #  https://github.com/openshift/source-to-image/blob/master/docs/builder_image.md
 #
 
-exec java -jar application.jar
+if [ "$JOLOKIA_ENABLED" = "true" ]
+then
+    echo "Jolokia enabled, starting jolokia java agent"
+    export JOLOKIA_ARGS="-Djolokia=true"
+fi
+
+exec java ${JOLOKIA_ARGS} -jar /deployments/application.jar
