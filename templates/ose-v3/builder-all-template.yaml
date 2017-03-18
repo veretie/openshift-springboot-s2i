@@ -1,12 +1,11 @@
 apiVersion: v1
 kind: Template
 metadata:
-  creationTimestamp: null
-  name: springboot-app
+  name: builder-all-template
   annotations:
-    description: "SpringBoot application" 
-    tags: "java,springboot"
-    iconClass: icon-java   
+    description: "Template for SpringBoot apps creation. Creates OSE objects: bc, dc, route & service"
+    tags: "springboot"
+    iconClass: icon-java
   
 objects:
 
@@ -23,19 +22,15 @@ objects:
 - apiVersion: v1
   kind: Service
   metadata:
-    creationTimestamp: null
     name: ${APPLICATION_NAME}-service
   spec:
-    portalIP: ""
     ports:
     - name: web
-      nodePort: 0
       port: 8080
       protocol: TCP
       targetPort: 8080
     selector:
       deploymentconfig: ${APPLICATION_NAME}-dc
-    sessionAffinity: None
     type: ClusterIP
 
 - apiVersion: v1
@@ -46,16 +41,12 @@ objects:
 - apiVersion: v1
   kind: BuildConfig
   metadata:
-    creationTimestamp: null
     name: ${APPLICATION_NAME}-bc
   spec:
     output:
       to:
         kind: ImageStreamTag
         name: ${APPLICATION_NAME}-is:latest
-    postCommit: {}
-    resources: {}
-    runPolicy: Serial
     source:
       git:
         ref: ${SOURCE_REPOSITORY_BRANCH}
@@ -66,7 +57,6 @@ objects:
         from:
           kind: ImageStreamTag
           name: openshift-springboot-s2i:latest
-          namespace: "openshift"
       type: Source
     triggers:
     - imageChange: {}
@@ -98,13 +88,6 @@ objects:
           from:
             kind: "ImageStreamTag"
             name: ${APPLICATION_NAME}-is:latest
-    strategy:
-      resources: {}
-      rollingParams:
-        intervalSeconds: 1
-        timeoutSeconds: 120
-        updatePeriodSeconds: 1
-      type: Rolling
 
 parameters:
   - name: APPLICATION_NAME 

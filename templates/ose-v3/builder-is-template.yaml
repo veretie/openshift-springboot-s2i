@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: builder-is-template
+  annotations:
+    description: "Create Springboot apps S2I builder ImageStream, which can be used to auto-create OSE objects: bc, dc, route, service, etc."
+    tags: "springboot"
+    iconClass: icon-java
+
+objects:
+
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: openshift-springboot-s2i
+  spec:
+    tags:
+    - name: 'latest'
+      annotations:
+        description: 'S2I builder image for SpringBoot application'
+        iconClass: icon-java
+        openshift.io/display-name: 'SpringBoot S2I'
+        sampleRepo: https://github.com/veretie/prime-numbers.git
+        tags: builder
+        version: '1.0'
+      from:
+        kind: DockerImage
+        name: veretie/openshift-springboot-s2i:latest

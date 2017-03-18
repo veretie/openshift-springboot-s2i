@@ -1,6 +1,6 @@
 # openshift-springboot-s2i
 OpenShift Docker builder image creation project. This image will allow OpenShift to build Maven SpringBoot application image from GIT source.
-Details about OpenShift builds and builder image usage described at https://docs.openshift.com/enterprise/3.0/dev_guide/builds.html
+Details about OpenShift builds and builder image usage described at https://docs.openshift.com/container-platform/3.4/dev_guide/builds/index.html
 
 ## Build image
 
@@ -28,9 +28,6 @@ with ```docker push <yourname>/openshift-springboot-s2i``` command.
  - JDK 1.8.0_111
  
 # Using builder image in OpenShift v3
-Template ```templates/ose-v3-template.json``` provided to automate creation of OSE v3 objects:
- - route & service
- - build & deploy configs
- - image stream
-To install the template issue ```oc create -f <path-to-template>/ose-v3-template.json -n openshift``` command in Openshift.
- 
+Templates in ```templates/ose-v3``` folder provide automation of OSE objects creation. One of the following options can be chosen:
+ - ```builder-is-template.yaml``` creates builder image stream [recommended]
+ - ```builder-all-template.yaml``` creates bc, dc, service and route explicitly when running the template
