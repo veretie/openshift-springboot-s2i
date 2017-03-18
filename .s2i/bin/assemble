@@ -21,4 +21,4 @@ mvn clean package
 echo "---> copying JAR over to /opt/app-root"
 cp -f /tmp/src/target/*jar /opt/app-root/application.jar
 
-rm -rf /tmp/*
+rm -rf /tmp/src/*
