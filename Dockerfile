@@ -25,7 +25,7 @@ RUN mkdir -p /opt/jolokia/etc \
  && curl http://central.maven.org/maven2/org/jolokia/jolokia-jvm/1.3.5/jolokia-jvm-1.3.5-agent.jar \
          -o /opt/jolokia/jolokia.jar
 ADD jolokia /opt/jolokia/
-RUN chmod 755 -R /opt/jolokia
+RUN chmod 777 -R /opt/jolokia
 
 # Install Maven
 RUN curl -O http://www-eu.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz \
