@@ -1,5 +1,5 @@
 
-IMAGE_NAME = openshift-springboot-s2i
+IMAGE_NAME = veretie/openshift-springboot-s2i
 
 build:
 	docker build -t $(IMAGE_NAME) .
