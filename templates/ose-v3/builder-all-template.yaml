@@ -75,6 +75,10 @@ objects:
       spec:
         containers:
           - name: ${APPLICATION_NAME}
+            ports:
+              - name: jolokia
+                containerPort: 8778
+                protocol: TCP
     replicas: 1 
     selector:
       name: ${APPLICATION_NAME}-dc
