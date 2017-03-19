@@ -3,10 +3,12 @@ FROM openshift/base-centos7
 MAINTAINER Ed Veretinskas <ed@mits4u.co.uk>
 
 # Inform about software versions being used inside the builder
-ENV MAVEN_VERSION=3.3.9
-ENV JAVA_VERSION=1.8.0_111
-ENV JAVA_HOME=/usr/java/jdk1.8.0_111/jre
-ENV M2_HOME=/usr/local/apache-maven/apache-maven-3.3.9
+ENV MAVEN_VERSION="3.3.9" \
+    JAVA_VERSION="1.8.0_111" \
+    JAVA_HOME="/usr/java/jdk1.8.0_111/jre" \
+    M2_HOME="/usr/local/apache-maven/apache-maven-3.3.9" \
+    JOLOKIA_VERSION="1.3.5" \
+    AB_JOLOKIA_AUTH_OPENSHIFT="true"
 
 # Set labels used in OpenShift to describe the builder images
 LABEL io.k8s.description="Buidler image for serving Spring Boot micro-services" \
@@ -17,6 +19,13 @@ LABEL io.k8s.description="Buidler image for serving Spring Boot micro-services" 
 RUN wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u111-b14/jdk-8u111-linux-x64.rpm" \
  && rpm -ivh jdk-8u111-linux-x64.rpm \
  && rm -rf jdk-8u111-linux-x64.rpm
+
+# Jolokia agent
+RUN mkdir -p /opt/jolokia/etc \
+ && curl http://central.maven.org/maven2/org/jolokia/jolokia-jvm/1.3.5/jolokia-jvm-1.3.5-agent.jar \
+         -o /opt/jolokia/jolokia.jar
+ADD jolokia /opt/jolokia/
+RUN chmod 755 -R /opt/jolokia
 
 # Install Maven
 RUN curl -O http://www-eu.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz \
