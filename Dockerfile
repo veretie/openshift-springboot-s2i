@@ -8,7 +8,9 @@ ENV MAVEN_VERSION="3.3.9" \
     JAVA_HOME="/usr/java/jdk1.8.0_111/jre" \
     M2_HOME="/usr/local/apache-maven/apache-maven-3.3.9" \
     JOLOKIA_VERSION="1.3.5" \
-    JOLOKIA_ENABLED="true"
+    JOLOKIA_ENABLED="true" \
+    JOLOKIA_HOME="/opt/jolokia/" \
+    APP_ROOT="/opt/app-root/"
 
 # Set labels used in OpenShift to describe the builder images
 LABEL io.k8s.description="Buidler image for serving Spring Boot micro-services" \

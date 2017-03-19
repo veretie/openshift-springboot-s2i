@@ -31,3 +31,7 @@ with ```docker push <yourname>/openshift-springboot-s2i``` command.
 Templates in ```templates/ose-v3``` folder provide automation of OSE objects creation. One of the following options can be chosen:
  - ```builder-is-template.yaml``` creates builder image stream [recommended]
  - ```builder-all-template.yaml``` creates bc, dc, service and route explicitly when running the template
+
+# Jolokia
+Jolokia will be enabled by default and can be disabled using ```JOLOKIA_ENABLED``` environment variable.
+
