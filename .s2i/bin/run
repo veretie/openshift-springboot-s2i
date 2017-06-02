@@ -13,4 +13,5 @@ then
     export JOLOKIA_ARGS="-javaagent:/opt/jolokia/jolokia.jar=config=/opt/jolokia/etc/jolokia.properties"
 fi
 
-exec java ${JOLOKIA_ARGS} -jar /opt/app-root/application.jar
+cd ${APP_ROOT}
+exec java ${JOLOKIA_ARGS} -jar application.jar
