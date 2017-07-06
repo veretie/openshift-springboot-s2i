@@ -19,6 +19,14 @@ stream that will hold the builder image.
 
 ### GUI
 
-After builder image installation ```springboot-s2i``` will apear under ```Java``` panel:
+After builder image installation ```springboot-s2i``` will appear under ```Java``` images panel where it can be customised:
 
-![SpringBoot S2I](./docs/springboot-s2i-ose.jpg)
+![SpringBoot S2I](./docs/springboot-s2i-gui.jpg)
+
+### How it works
+
+ Openshift will checkout GIT source from provided repository, copy this to builder image where
+ maven clean package command will be executed to create uber jar.
+ Jar will be copied to application image's ```/opt/app-root/``` directory.
+ When running application image, ```java``` command referencing that jar will be constructed
+ based on provided envronment variables where debuging, jolokia, etc. can be enabled.
