@@ -1,24 +1,12 @@
 #!/bin/bash -e
-#
-# S2I assemble script for the 'openshift-springboot-s2i' image.
-# The 'assemble' script builds your application source ready to run.
-#
-# For more information refer to the documentation:
-#  https://github.com/openshift/source-to-image/blob/master/docs/builder_image.md
-#
 
-export PATH=$JAVA_HOME/bin:$M2_HOME/bin:$PATH
-
-echo "---> Installing application source"
-
-cd /tmp/src
+S2I_SOURCE_DIR="/tmp/src"
 
 echo "PATH = $PATH"
 
-echo "---> Running maven packaging"
+echo "---> Building application from source ${S2I_SOURCE_DIR}"
+cd ${S2I_SOURCE_DIR}
 mvn clean package
 
-echo "---> copying JAR over to /opt/app-root"
-cp -f /tmp/src/target/*jar /opt/app-root/application.jar
-
-rm -rf /tmp/src/*
+echo "---> copying JARs over to /${APP_ROOT}"
+cp -f ${S2I_SOURCE_DIR}/target/*jar /${APP_ROOT}/

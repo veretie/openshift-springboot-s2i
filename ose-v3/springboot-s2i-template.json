@@ -1,0 +1,98 @@
+{
+  "kind": "Template",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "springboot-s2i-template",
+    "annotations": {
+      "iconClass": "icon-openjdk",
+      "description": "Template to create springboot-s2i builder image"
+    }
+  },
+  "labels": {
+    "app": "springboot-s2i",
+    "application": "springboot-s2i"
+  },
+  "parameters": [
+    {
+      "description": "Name",
+      "name": "APPLICATION_NAME",
+      "value": "springboot-s2i"
+    },
+    {
+      "description": "Version",
+      "name": "JAVA_VERSION_PARAM",
+      "value": "1.8.0_131"
+    },
+    {
+      "description": "Base Image",
+      "name": "BASE_IMAGE",
+      "value": "openshift/base-centos7:latest"
+    },
+    {
+      "name": "SOURCE_REPOSITORY_URL",
+      "displayName": "Source Repository URL",
+      "description": "The URL pointing to the repo where the DockerFile exists",
+      "value": "https://github.com/veretie/openshift-springboot-s2i.git",
+      "required": true
+    }
+  ],
+  "objects": [
+    {
+      "kind": "BuildConfig",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "${APPLICATION_NAME}"
+      },
+      "spec": {
+        "triggers": [
+          {
+            "type": "ConfigChange"
+          }
+        ],
+        "source": {
+          "type": "Git",
+          "git": {
+            "uri": "${SOURCE_REPOSITORY_URL}",
+            "ref": "master"
+          }
+        },
+        "strategy": {
+          "type": "Docker",
+          "dockerStrategy": {
+            "from": {
+              "kind": "ImageStreamTag",
+              "name": "${BASE_IMAGE}"
+            }
+          }
+        },
+        "output": {
+          "to": {
+            "kind": "ImageStreamTag",
+            "name": "${APPLICATION_NAME}:${JAVA_VERSION_PARAM}"
+          }
+        }
+      }
+    },
+    {
+      "kind": "ImageStream",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "${APPLICATION_NAME}"
+      },
+      "spec": {
+        "tags": [
+          {
+            "name": "${JAVA_VERSION_PARAM}",
+            "annotations": {
+              "description": "Springboot Source to Image",
+              "iconClass": "icon-openjdk",
+              "sampleRepo": "https://github.com/veretie/prime-numbers.git",
+              "supports": "java:8",
+              "tags": "builder,javas2i,java"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,17 +1,26 @@
-#!/bin/bash -e
-#
-# S2I run script for the 'openshift-springboot-s2i' image..
-# The run script executes the server that runs your application.
-#
-# For more information see the documentation:
-#  https://github.com/openshift/source-to-image/blob/master/docs/builder_image.md
-#
+#!/bin/bash
+
+JAR_COUNT=`ls -1q ${APP_ROOT}/*.jar | wc -l`
+if [ $JAR_COUNT -ne 1 ]; then
+   echo "ERROR: $JAR_COUNT JARs in $DEPLOY_DIR is not supported in generic S2I builder, one JAR is expected"
+   exit 1
+fi
+
+JAR=`ls ${APP_ROOT}/*.jar`
 
 if [ "$JOLOKIA_ENABLED" = "true" ]
 then
     echo "Jolokia enabled, starting jolokia java agent"
-    export JOLOKIA_ARGS="-javaagent:/opt/jolokia/jolokia.jar=config=/opt/jolokia/etc/jolokia.properties"
+    JOLOKIA_ARGS="-javaagent:/opt/jolokia/jolokia.jar=config=/opt/jolokia/etc/jolokia.properties"
 fi
 
-cd ${APP_ROOT}
-exec java ${JOLOKIA_ARGS} -jar application.jar
+if [ "$DEBUG" = "true" ]
+then
+    echo "Remote debug is enabled, starting agent on port 5005"
+    JVM_ARGS="$JVM_ARGS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"
+fi
+
+
+RUN_COMMAND="exec java $JVM_ARGS $JOLOKIA_ARGS -jar $JAR"
+echo "Executing --> $RUN_COMMAND"
+eval "$RUN_COMMAND"
