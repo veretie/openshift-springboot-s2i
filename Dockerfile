@@ -12,6 +12,8 @@ ENV MAVEN_VERSION="3.3.9" \
     JOLOKIA_HOME="/opt/jolokia/" \
     APP_ROOT="/opt/app-root/"
 
+ENV PATH="${PATH}:${M2_HOME}/bin:${JAVA_HOME}/bin"
+
 # Set labels used in OpenShift to describe the builder images
 LABEL   io.openshift.s2i.scripts-url="image:///usr/local/s2i" \
         io.openshift.tags="builder,java,springboots2i" \
