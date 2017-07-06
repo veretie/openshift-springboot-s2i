@@ -1,4 +1,4 @@
-# SpringBoot S2I (source-to-image)
+# Java S2I (source-to-image) for springboot apps
 
 ### Overview
 Project holds scripts and configuration to build ```springboot-s2i``` builder image for springboot source-to-image applications.
@@ -10,7 +10,7 @@ stream that will hold the builder image.
 ```springboot-s2i``` builder image contains:
  - Oracle JDK 1.8.0_131 x64 bit, set ```JVM_ARGS``` environment variable to add extra arguments to ```java``` process
  - Jolokia (disabled by default, to enable set environment variable ```JOLOKIA_ENABLED=true```).
-   Add ```8778``` port named ```jolokia that will render ```Open Java Console``` jolokia link in openshift GUI container view.
+   Add ```8778``` port named ```jolokia``` that will render ```Open Java Console``` jolokia link in openshift GUI container view.
  - Maven 3.3.9
 
 #### Remote debug application built with Java S2I
@@ -21,4 +21,4 @@ stream that will hold the builder image.
 
 After builder image installation ```springboot-s2i``` will apear under ```Java``` panel:
 
-![SpringBoot S2I](./docs/springboot-s2i.jpg)
+![SpringBoot S2I](./docs/springboot-s2i-ose.jpg)

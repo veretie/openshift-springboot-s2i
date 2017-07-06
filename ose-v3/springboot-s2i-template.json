@@ -85,7 +85,7 @@
           {
             "name": "${JAVA_VERSION_PARAM}",
             "annotations": {
-              "description": "Springboot Source to Image",
+              "description": "Java Source to Image for springboot apps",
               "iconClass": "icon-openjdk",
               "sampleRepo": "https://github.com/veretie/prime-numbers.git",
               "supports": "java:8",
