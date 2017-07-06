@@ -1,37 +1,24 @@
-# openshift-springboot-s2i
-OpenShift Docker builder image creation project. This image will allow OpenShift to build Maven SpringBoot application image from GIT source.
-Details about OpenShift builds and builder image usage described at https://docs.openshift.com/container-platform/3.4/dev_guide/builds/index.html
+# SpringBoot S2I (source-to-image)
 
-## Build image
+### Overview
+Project holds scripts and configuration to build ```springboot-s2i``` builder image for springboot source-to-image applications.
+Use ```create-all-ose-objects.bat``` script to set up (or update project) automatically. Script will load base ```base-centos7```
+image, will create build config referencing Dockerfile from this repository and will create ```springboot-s2i``` image
+stream that will hold the builder image.
 
-### Pre-requisites
- - **Linux OS** needed to trigger the build. For Windows, use provided ```Vagrantfile``` which will create Linux Centos 7 OS host.
- - **Docker** needed to create Docker builder image for OpenShift.
-
-### Create image
- - Execute ```make test``` command to create candidate build and run tests against it [optional]
- - Execute ```make build``` command to create ```openshift-springboot-s2i``` docker image
- 
-## Test image
-OpenShift provides **s2i** tool which can be found in ```test``` directory. 
-With the help of **s2i** you can explicitly test builder image using actual SpringBoot source code from GIT.
-**s2i** for testing can be used in the following format: ```s2i build <source code> openshift-springboot-s2i:latest <application image>```, i.e. 
-command ```./test/s2i build https://github.com/veretie/prime-numbers.git openshift-springboot-s2i:latest prime-numbers-openshift``` 
-will create ```prime-numbers-openshift``` image with SpringBoot application started on image run/start.
-
-## Publish image
-Builder image can be published to Docker Hub or other Docker repo for OpenShift availability 
-with ```docker push <yourname>/openshift-springboot-s2i``` command.
-
-## Tools used by builder image to build source
+### SpringBoot S2I
+```springboot-s2i``` builder image contains:
+ - Oracle JDK 1.8.0_131 x64 bit, set ```JVM_ARGS``` environment variable to add extra arguments to ```java``` process
+ - Jolokia (disabled by default, to enable set environment variable ```JOLOKIA_ENABLED=true```).
+   Add ```8778``` port named ```jolokia that will render ```Open Java Console``` jolokia link in openshift GUI container view.
  - Maven 3.3.9
- - JDK 1.8.0_111
- 
-# Using builder image in OpenShift v3
-Templates in ```templates/ose-v3``` folder provide automation of OSE objects creation. One of the following options can be chosen:
- - ```builder-is-template.yaml``` creates builder image stream [recommended]
- - ```builder-all-template.yaml``` creates bc, dc, service and route explicitly when running the template
 
-# Jolokia
-Jolokia will be enabled by default and can be disabled using ```JOLOKIA_ENABLED``` environment variable.
+#### Remote debug application built with Java S2I
+ Remote debugging is disabled by default, to enable set environment variable ```DEBUG=true``` which will start listening to opened ```5005``` port in your application container.
+ You can use port forward on your local application ```oc port-forward <POD_NAME> 5005:5005``` and then attach your IDE to ```127.0.0.1:5005``` to debug application.
 
+### GUI
+
+After builder image installation ```springboot-s2i``` will apear under ```Java``` panel:
+
+![SpringBoot S2I](./docs/springboot-s2i.jpg)
