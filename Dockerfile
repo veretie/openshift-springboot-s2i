@@ -8,9 +8,10 @@ ENV MAVEN_VERSION="3.3.9" \
     JAVA_HOME="/usr/java/jdk1.8.0_131/jre" \
     M2_HOME="/usr/local/apache-maven/apache-maven-3.3.9" \
     JOLOKIA_VERSION="1.3.5" \
-    JOLOKIA_ENABLED="true" \
+    JOLOKIA_ENABLED="false" \
     JOLOKIA_HOME="/opt/jolokia/" \
-    APP_ROOT="/opt/app-root/"
+    APP_ROOT="/opt/app-root/" \
+    DEBUG="false"
 
 ENV PATH="${PATH}:${M2_HOME}/bin:${JAVA_HOME}/bin"
 
