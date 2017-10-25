@@ -8,10 +8,10 @@ stream that will hold the builder image.
 
 ### SpringBoot S2I
 ```springboot-s2i``` builder image contains:
- - Oracle JDK 1.8.0_131 x64 bit, set ```JVM_ARGS``` environment variable to add extra arguments to ```java``` process
+ - Oracle JDK 9.0.1 x64 bit, set ```JVM_ARGS``` environment variable to set module path or add extra arguments to ```java``` process
  - Jolokia (disabled by default, to enable set environment variable ```JOLOKIA_ENABLED=true```).
    Add ```8778``` port named ```jolokia``` that will render ```Open Java Console``` jolokia link in openshift GUI container view.
- - Maven 3.3.9
+ - Maven 3.5.2
 
 #### Remote debug application built with Java S2I
  Remote debugging is disabled by default, to enable set environment variable ```DEBUG=true``` which will start listening to opened ```5005``` port in your application container.
@@ -29,4 +29,4 @@ After builder image installation ```springboot-s2i``` will appear under ```Java`
  maven clean package command will be executed to create uber jar.
  Jar will be copied to application image's ```/opt/app-root/``` directory.
  When running application image, ```java``` command referencing that jar will be constructed
- based on provided envronment variables where debuging, jolokia, etc. can be enabled.
+ based on provided envronment variables where debugging, jolokia, etc. can be enabled.

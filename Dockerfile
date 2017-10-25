@@ -3,10 +3,12 @@ FROM openshift/base-centos7
 MAINTAINER Ed Veretinskas <ed@mits4u.co.uk>
 
 # Inform about software versions being used inside the builder
-ENV MAVEN_VERSION="3.3.9" \
-    JAVA_VERSION="1.8.0_131" \
-    JAVA_HOME="/usr/java/jdk1.8.0_131/jre" \
-    M2_HOME="/usr/local/apache-maven/apache-maven-3.3.9" \
+ENV MAVEN_VERSION="3.5.2" \
+    JAVA_VERSION="9.0.1" \
+    JAVA_PATCH="11"
+
+ENV JAVA_HOME="/usr/java/jdk-${JAVA_VERSION}" \
+    M2_HOME="/usr/local/apache-maven/apache-maven-${MAVEN_VERSION}" \
     JOLOKIA_VERSION="1.3.5" \
     JOLOKIA_ENABLED="false" \
     JOLOKIA_HOME="/opt/jolokia/" \
@@ -25,14 +27,9 @@ LABEL   io.openshift.s2i.scripts-url="image:///usr/local/s2i" \
         java.vendor="mits4u.co.uk"
 
 # Install JAVA_VERSION
-RUN wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u131-b11/d54c1d3a095b4ff2b6607d096fa80163/jdk-8u131-linux-x64.rpm" \
- && rpm -ivh jdk-8u131-linux-x64.rpm \
- && rm -rf jdk-8u131-linux-x64.rpm
-
-# Install the Java JCE Policy
-RUN curl -q -L -C - -b "oraclelicense=accept-securebackup-cookie" -o /tmp/jce_policy-8.zip -O http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip \
-    && unzip -oj -d /usr/java/jdk1.8.0_131/jre/lib/security /tmp/jce_policy-8.zip \*/\*.jar \
-    && rm /tmp/jce_policy-8.zip
+RUN wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/${JAVA_VERSION}+${JAVA_PATCH}/jdk-${JAVA_VERSION}_linux-x64_bin.rpm" \
+ && rpm -ivh jdk-${JAVA_VERSION}_linux-x64_bin.rpm \
+ && rm -rf jdk-${JAVA_VERSION}_linux-x64_bin.rpm
 
 # Jolokia agent
 RUN mkdir -p /opt/jolokia/etc \
